@@ -1,0 +1,7 @@
+[run]
+branch = True
+source = gazprom_test_task_jokes
+omit = site-packages
+
+[html]
+directory = coverage

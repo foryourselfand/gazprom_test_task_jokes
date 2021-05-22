@@ -1,0 +1,7 @@
+sanic
+sanic-openapi
+pytest
+pytest-sanic
+sphinx
+tox
+json-logging-py

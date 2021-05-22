@@ -1,0 +1,15 @@
+sanic
+sanic-openapi
+pytest
+pytest-sanic
+sphinx
+tox
+json-logging-py
+bumpversion
+twine
+coverage==4.5.1
+pytest-cov
+pytest-runner
+gitchangelog
+gino
+sanic_limiter
