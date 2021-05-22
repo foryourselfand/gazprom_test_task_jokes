@@ -1,6 +1,7 @@
 sanic
 sanic-openapi
 sanic-testing
+sanic_testing
 pytest
 pytest-sanic
 sphinx
