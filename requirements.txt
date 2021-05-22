@@ -1,7 +1,6 @@
 sanic
 sanic-openapi
 json-logging-py
-gino
 sanic_limiter
 opentracing
 jaeger-client

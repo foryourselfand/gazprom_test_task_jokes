@@ -1,5 +1,6 @@
 sanic
 sanic-openapi
+sanic-testing
 pytest
 pytest-sanic
 sphinx
@@ -7,9 +8,8 @@ tox
 json-logging-py
 bumpversion
 twine
-coverage==4.5.1
+coverage==5.2.1
 pytest-cov
 pytest-runner
 gitchangelog
-gino
 sanic_limiter
