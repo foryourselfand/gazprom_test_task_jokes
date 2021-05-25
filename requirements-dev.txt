@@ -1,16 +1,12 @@
-sanic
-sanic-openapi
+-r requirements.txt
 sanic-testing
-sanic_testing
 pytest
 pytest-sanic
 sphinx
 tox
-json-logging-py
 bumpversion
 twine
 coverage==5.2.1
 pytest-cov
 pytest-runner
 gitchangelog
-sanic_limiter

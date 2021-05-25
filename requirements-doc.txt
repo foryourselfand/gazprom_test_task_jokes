@@ -1,7 +1,5 @@
-sanic
-sanic-openapi
+-r requirements.txt
 pytest
 pytest-sanic
 sphinx
 tox
-json-logging-py
