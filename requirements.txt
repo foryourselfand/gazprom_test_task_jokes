@@ -1,6 +1,5 @@
+gunicorn
 sanic
 sanic-openapi
+sanic-limiter
 json-logging-py
-sanic_limiter
-opentracing
-jaeger-client

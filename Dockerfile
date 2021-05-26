@@ -4,7 +4,6 @@ MAINTAINER foryourselfand
 
 # Start Installing the Basic Dependencies
 RUN pip install --upgrade pip
-RUN pip install gunicorn
 
 RUN mkdir -p /sanic/config
 RUN mkdir -p /sanic/gazprom_test_task_jokes
@@ -14,6 +13,8 @@ COPY gazprom_test_task_jokes/ /sanic/gazprom_test_task_jokes/
 COPY requirements.txt /sanic
 COPY run.py /sanic/run.py
 COPY .env /sanic/.env
+
+RUN pip install -r /sanic/requirements.txt
 
 WORKDIR /sanic
 RUN find . -type f

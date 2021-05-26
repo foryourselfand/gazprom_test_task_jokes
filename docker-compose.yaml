@@ -1,40 +1,41 @@
 version: '3'
 services:
-    postgres:
-        restart: always
-        image: postgres:latest
-        container_name: postgres
+    elasticsearch:
+        image: elasticsearch:7.12.1
+        container_name: elasticsearch
         environment:
-            POSTGRES_PASSWORD: password
+            ES_JAVA_OPTS: "-Xmx512m -Xms512m"
+            discovery.type: single-node
         env_file: .env
         ports:
-            - "5432:5432"
+            - 9200:9200
+            - 9300:9300
         volumes:
-            - pg-data:/var/lib/postgresql/data
+            -   type: volume
+                source: elasticsearch
+                target: /usr/share/elasticsearch/data
         networks:
-          - sanic
+            - elc
 
     gazprom_test_task_jokes:
         restart: always
         build:
             context: .
+        container_name: gazprom_test_task_jokes
         ports:
-            - "8888:8888"
+            - 8888:8888
         env_file: .env
-        environment:
-            SANIC_DB_HOST: postgres
-            SANIC_DB_PASSWORD: password
-            SANIC_DB_DATABASE: postgres
         depends_on:
-            - postgres
+            - elasticsearch
         links:
-            - postgres
+            - elasticsearch
         networks:
-            - sanic
+            - elc
 
 volumes:
-    pg-data:
+    elasticsearch:
         driver: local
 
 networks:
-    sanic:
+    elc:
+        driver: bridge
