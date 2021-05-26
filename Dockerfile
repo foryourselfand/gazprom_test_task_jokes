@@ -1,7 +1,6 @@
 FROM python:3.7-slim
 MAINTAINER foryourselfand
 
-
 # Start Installing the Basic Dependencies
 RUN pip install --upgrade pip
 
