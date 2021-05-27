@@ -2,4 +2,7 @@ gunicorn
 sanic
 sanic-openapi
 sanic-limiter
+sanic-useragent
+sanic-camelcase-middleware
+secure
 json-logging-py

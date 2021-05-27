@@ -1,6 +1,7 @@
 -r requirements.txt
 sanic-testing
 pytest
+pytest-asyncio
 pytest-sanic
 sphinx
 tox

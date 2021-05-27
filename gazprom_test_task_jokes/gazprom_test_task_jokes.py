@@ -1,50 +1,54 @@
-from gazprom_test_task_jokes.blueprint.health import health
-from gazprom_test_task_jokes.util import setup_rate_limiter
-from sanic_openapi import doc, swagger_blueprint
+from sanic import Blueprint, Sanic
+from sanic.log import logger
+from sanic.response import text
+from sanic_openapi import swagger_blueprint
 
-from sanic import Blueprint, Request, Sanic
-from sanic.response import HTTPResponse, json, text
+from gazprom_test_task_jokes.blueprint.health import health
+from gazprom_test_task_jokes.util import configure_swagger_ui, setup_rate_limiter
+from sanic_useragent import SanicUserAgent
+from sanic_camelcase_middleware import Camelize
+import secure
 
 app = Sanic(__name__)
+logger.info(app.config)
 
+secure_headers = secure.Secure()
+SanicUserAgent.init_app(app)
+Camelize(app)
+configure_swagger_ui(app)
 limiter = setup_rate_limiter(app)
-
 app.blueprint(swagger_blueprint)
+
 api = Blueprint.group(health, url_prefix="/api", version=1)
 app.blueprint(api)
 
 
 @app.before_server_start
-async def setup_db(app, loop):
-    pass
+async def setup(app, loop):
+    logger.debug('app.before_server_start')
 
 
 @app.after_server_stop
-async def teardown_db(app, loop):
-    pass
+async def teardown(app, loop):
+    logger.debug('app.after_server_stop')
 
 
 @app.on_request
-async def extract_user(request):
-    # request.ctx.user = await extract_user_from_request(request)
-    pass
+async def on_request(request):
+    logger.debug('app.on_request')
 
 
 @app.on_response
-async def prevent_xss(request, response):
-    response.headers["x-xss-protection"] = "1; mode=block"
+async def on_response(request, response):
+    logger.debug('app.on_response')
+
+
+@app.on_response
+async def set_secure_headers(request, response):
+    secure_headers.framework.sanic(response)
+    logger.info(str(response.headers))
 
 
 @app.on_response
 async def add_request_id_header(request, response):
     response.headers["X-Request-ID"] = request.id
-
-
-@app.route("/check_Token_or_Bearer")
-async def handler(request):
-    return text(str(request.token))
-
-
-@app.route("/check_X-Request-ID")
-async def handler(request):
-    return text(str(request.id))

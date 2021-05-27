@@ -13,7 +13,7 @@ services:
             - 9300:9300
         volumes:
             -   type: volume
-                source: elasticsearch
+                source: ./elasticsearch
                 target: /usr/share/elasticsearch/data
         networks:
             - elc
@@ -22,7 +22,9 @@ services:
         restart: always
         build:
             context: .
+            dockerfile: ./Dockerfile
         container_name: gazprom_test_task_jokes
+        volumes: ['./gazprom_test_task_jokes:/sanic/gazprom_test_task_jokes']
         ports:
             - 8888:8888
         env_file: .env
