@@ -2,7 +2,7 @@ from gazprom_test_task_jokes.blueprint.health import health
 from gazprom_test_task_jokes.util import setup_rate_limiter
 from sanic_openapi import doc, swagger_blueprint
 
-from sanic import Request, Sanic
+from sanic import Blueprint, Request, Sanic
 from sanic.response import HTTPResponse, json, text
 
 app = Sanic(__name__)
@@ -10,8 +10,8 @@ app = Sanic(__name__)
 limiter = setup_rate_limiter(app)
 
 app.blueprint(swagger_blueprint)
-
-app.blueprint(health)
+api = Blueprint.group(health, url_prefix="/api", version=1)
+app.blueprint(api)
 
 
 @app.before_server_start
@@ -42,14 +42,9 @@ async def add_request_id_header(request, response):
 
 @app.route("/check_Token_or_Bearer")
 async def handler(request):
-    return text(request.token)
+    return text(str(request.token))
 
 
 @app.route("/check_X-Request-ID")
 async def handler(request):
-    return text(request.id)
-
-
-@app.route("/")
-async def default(request: Request) -> HTTPResponse:
-    return json({"message": "hello Sanic!"})
+    return text(str(request.id))

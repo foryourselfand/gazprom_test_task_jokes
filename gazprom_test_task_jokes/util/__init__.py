@@ -20,6 +20,10 @@ def sanic_config_manager(app: Sanic, prefix: str = "SANIC_", env_file = "../../.
                 app.config[var] = value
         except:
             pass
+    app.config.SWAGGER_UI_CONFIGURATION = {
+        'validatorUrl':           None,
+        'displayRequestDuration': True,
+        }
 
 
 def setup_rate_limiter(app: Sanic):

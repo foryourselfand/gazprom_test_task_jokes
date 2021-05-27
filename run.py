@@ -5,9 +5,9 @@ sanic_config_manager(app, prefix="SANIC_")
 
 if __name__ == "__main__":
     app.run(
-        host="0.0.0.0",
-        port=8888,
-        workers=4,
-        debug=True,
-        access_log=True,
+        host=app.config['HOST'],
+        port=app.config['PORT'],
+        workers=app.config['WORKERS'],
+        debug=app.config['DEBUG'] == 'True',
+        access_log=app.config['ACCESS_LOG'] == 'True',
         )
