@@ -1,21 +1,18 @@
+import secure
+from elasticsearch import AsyncElasticsearch
 from sanic import Blueprint, Sanic
 from sanic.log import logger
-from sanic.response import text
-from sanic_openapi import swagger_blueprint
-
-from gazprom_test_task_jokes.blueprint.health import health
-from gazprom_test_task_jokes.util import configure_swagger_ui, setup_rate_limiter
-from sanic_useragent import SanicUserAgent
-from sanic_camelcase_middleware import Camelize
 from sanic_cors import CORS
+from sanic_openapi import swagger_blueprint
 from sanic_sslify import SSLify
-import secure
+from sanic_useragent import SanicUserAgent
+
+from blueprint.health import health
+from util import configure_swagger_ui, setup_rate_limiter
 
 app = Sanic(__name__)
-logger.info(app.config)
 
 CORS(app)
-Camelize(app)
 configure_swagger_ui(app)
 SanicUserAgent.init_app(app)
 sslify = SSLify(app)
@@ -30,11 +27,21 @@ app.blueprint(api)
 @app.before_server_start
 async def setup(app, loop):
     logger.debug('app.before_server_start')
+    app.ctx.elastic_search = AsyncElasticsearch([{
+        'host': app.config.ELASTICSEARCH_HOST,
+        'port': app.config.ELASTICSEARCH_PORT
+        }])
+    ping = await app.ctx.elastic_search.ping()
+    if ping:
+        logger.debug('elasticsearch connected')
+    else:
+        logger.debug('elasticsearch not connected')
 
 
 @app.after_server_stop
 async def teardown(app, loop):
     logger.debug('app.after_server_stop')
+    await app.ctx.elastic_search.close()
 
 
 @app.on_request

@@ -19,7 +19,9 @@ WORKDIR /sanic
 
 RUN find . -type f
 
-EXPOSE ${SANIC_PORT}
+EXPOSE ${SANIC_SERVER_PORT}
+
+ENV PYTHONPATH "${PYTHONPATH}:/sanic/gazprom_test_task_jokes"
 
 ENTRYPOINT ["python", "run.py"]
 
