@@ -7,7 +7,7 @@ from sanic.response import HTTPResponse, json
 health = Blueprint('health', url_prefix='/health')
 
 
-@health.get('/status')
+@health.route('/status', methods=['GET'])
 @doc.summary('Health Status API')
 @doc.description('This is a test route with detail description.')
 @doc.produces({'status': str})

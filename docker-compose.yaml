@@ -16,7 +16,7 @@ services:
                 source: ./elasticsearch
                 target: /usr/share/elasticsearch/data
         networks:
-            - elc
+            - sanic-network
 
     gazprom_test_task_jokes:
         restart: always
@@ -33,12 +33,12 @@ services:
         links:
             - elasticsearch
         networks:
-            - elc
+            - sanic-network
 
 volumes:
     elasticsearch:
         driver: local
 
 networks:
-    elc:
+    sanic-network:
         driver: bridge
