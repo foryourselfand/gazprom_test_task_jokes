@@ -4,7 +4,6 @@ sanic-openapi
 sanic-limiter
 sanic-useragent
 sanic-cors
-sanic-fire
 Sanic-SSLify
 secure
 json-logging-py
