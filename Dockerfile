@@ -1,7 +1,6 @@
 FROM python:3.7-slim
 MAINTAINER foryourselfand
 
-# Start Installing the Basic Dependencies
 RUN pip install --upgrade pip
 
 RUN mkdir -p /sanic/config
@@ -14,6 +13,7 @@ COPY run.py /sanic
 COPY .env /sanic
 
 RUN pip install -r /sanic/requirements.txt
+RUN pip install sanic-jwt-extended --pre
 
 WORKDIR /sanic
 

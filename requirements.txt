@@ -9,3 +9,4 @@ secure
 json-logging-py
 aiohttp
 elasticsearch
+bcrypt
