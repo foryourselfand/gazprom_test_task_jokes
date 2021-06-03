@@ -13,7 +13,6 @@ COPY run.py /sanic
 COPY .env /sanic
 
 RUN pip install -r /sanic/requirements.txt
-RUN pip install sanic-jwt-extended --pre
 
 WORKDIR /sanic
 

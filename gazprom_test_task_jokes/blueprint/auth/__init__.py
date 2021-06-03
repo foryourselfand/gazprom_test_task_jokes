@@ -1,8 +1,7 @@
 import bcrypt
 from sanic import Blueprint, exceptions, HTTPResponse, json, Request
-# noinspection PyUnresolvedReferences
-from sanic_jwt_extended import JWT, jwt_required, refresh_jwt_required
-# noinspection PyUnresolvedReferences
+from sanic.log import logger
+from sanic_jwt_extended import JWT, jwt_required
 from sanic_jwt_extended.tokens import Token
 from sanic_openapi.openapi2 import doc
 
@@ -10,8 +9,8 @@ from manager import app
 
 
 class User:
-    username = str
-    password = str
+    username = doc.String("The name of your user account.")
+    password = doc.String("The password of your user account.")
 
 
 auth = Blueprint('auth', url_prefix='/auth')
@@ -39,6 +38,7 @@ async def register(request: Request) -> HTTPResponse:
         index='users',
         body=search_body
         )
+    logger.debug(search_response)
     hits = search_response['hits']['hits']
     if len(hits) != 0:
         raise exceptions.Forbidden("User with that username already exist.")
@@ -54,6 +54,7 @@ async def register(request: Request) -> HTTPResponse:
         index='users',
         body=index_body
         )
+    logger.debug(index_response)
     return json({'register': "successfully"}, status=201)
 
 
@@ -103,13 +104,14 @@ async def login(request: Request) -> HTTPResponse:
 @doc.response(401, {"msg": str}, description="Unauthorized")
 @jwt_required
 async def logout(request: Request, token: Token) -> HTTPResponse:
-    Token.revoke(token)
+    await Token.revoke(token)
     return json({"logout": "successfully"}, status=200)
 
 
 @auth.route("/protected", methods=["GET"])
 @doc.consumes(doc.String(name="Authorization"), location="header", required=True)
 @doc.response(401, {"msg": str}, description="Unauthorized")
+@doc.response(422, {"msg": str}, description="Unprocessable Entity")
 @jwt_required
 async def protected(request: Request, token: Token) -> HTTPResponse:
     return json(dict(identity=token.identity, type=token.type, raw_data=token.raw_data, exp=str(token.exp)), status=200)

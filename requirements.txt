@@ -10,3 +10,5 @@ json-logging-py
 aiohttp
 elasticsearch
 bcrypt
+sanic-jwt-extended==1.0.dev12
+aiohttp

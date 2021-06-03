@@ -1,15 +1,13 @@
 from elasticsearch import AsyncElasticsearch
 from sanic import Blueprint, text
 from sanic.log import logger
-# noinspection PyUnresolvedReferences
-from sanic_jwt_extended import JWT
 from sanic_openapi.openapi2 import doc
 
 from blueprint.auth import auth
-from blueprint.health import health
+from blueprint.jokes import jokes
 from manager import app, secure_headers
 
-api = Blueprint.group(auth, health, url_prefix="/api", version=1)
+api = Blueprint.group(auth, jokes, url_prefix="/api", version=1)
 app.blueprint(api)
 
 
@@ -72,6 +70,42 @@ async def create_users_index(request):
                     "type": "text"
                     },
                 "password": {
+                    "type": "text"
+                    },
+                }
+            }
+        }
+    
+    created = False
+    try:
+        exist = await app.ctx.elasticsearch.indices.exists(index_name)
+        if not exist:
+            created = await app.ctx.elasticsearch.indices.create(index=index_name, body=settings)
+    except Exception as e:
+        logger.debug(e)
+    
+    if created:
+        return text(f'{index_name} index created')
+    else:
+        return text(f'{index_name} index not created')
+
+
+@app.route('/create_jokes_index', methods=['GET'])
+@doc.route(exclude=True)
+async def create_jokes_index(request):
+    index_name = 'jokes'
+    settings = {
+        "settings": {
+            "number_of_shards":   5,
+            "number_of_replicas": 1
+            },
+        "mappings": {
+            "dynamic":    "strict",
+            "properties": {
+                "username": {
+                    "type": "text"
+                    },
+                "joke": {
                     "type": "text"
                     },
                 }
