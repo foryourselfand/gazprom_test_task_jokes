@@ -1,3 +1,7 @@
+import asyncio
+from typing import Type
+
+import aiohttp
 from elasticsearch import AsyncElasticsearch
 from sanic import Blueprint, text
 from sanic.log import logger
@@ -5,7 +9,10 @@ from sanic_openapi.openapi2 import doc
 
 from blueprint.auth import auth
 from blueprint.jokes import jokes
+from repository.jokes_elasticsearch_repository import JokesElasticSearchRepository
+
 from manager import app, secure_headers
+from repository.users_elasticsearch_repository import UsersElasticSearchRepository
 
 api = Blueprint.group(auth, jokes, url_prefix="/api", version=1)
 app.blueprint(api)
@@ -14,21 +21,32 @@ app.blueprint(api)
 @app.before_server_start
 async def setup(app, loop):
     logger.debug('app.before_server_start')
+    
     app.ctx.elasticsearch = AsyncElasticsearch([{
         'host': app.config.ELASTICSEARCH_HOST,
         'port': app.config.ELASTICSEARCH_PORT
         }])
-    ping = await app.ctx.elasticsearch.ping()
-    if ping:
-        logger.debug('elasticsearch connected')
-    else:
-        logger.debug('elasticsearch not connected')
+    
+    while True:
+        ping = await app.ctx.elasticsearch.ping()
+        if ping:
+            logger.debug('elasticsearch connected')
+            break
+        else:
+            logger.debug('elasticsearch not connected')
+            await asyncio.sleep(2)
+    
+    app.ctx.users_repository = UsersElasticSearchRepository(app.ctx.elasticsearch)
+    app.ctx.jokes_repository = JokesElasticSearchRepository(app.ctx.elasticsearch)
+    
+    app.ctx.client_session = aiohttp.ClientSession(raise_for_status=True)
 
 
 @app.after_server_stop
 async def teardown(app, loop):
     logger.debug('app.after_server_stop')
     await app.ctx.elasticsearch.close()
+    await app.ctx.client_session.close()
 
 
 @app.on_request
@@ -105,7 +123,7 @@ async def create_jokes_index(request):
                 "username": {
                     "type": "text"
                     },
-                "joke": {
+                "joke":     {
                     "type": "text"
                     },
                 }
