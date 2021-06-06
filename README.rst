@@ -5,7 +5,8 @@
 .. image:: https://img.shields.io/pypi/v/gazprom_test_task_jokes.svg
         :target: https://pypi.python.org/pypi/gazprom_test_task_jokes
 
-.. image:: https://img.shields.io/travis/foryourselfand/gazprom_test_task_jokes.svg
+
+.. image:: https://travis-ci.com/foryourselfand/gazprom_test_task_jokes.svg?token=P5FfkTAAioUVqYK1i8us&branch=master
         :target: https://travis-ci.com/foryourselfand/gazprom_test_task_jokes
 
 .. image:: https://readthedocs.org/projects/gazprom-test-task-jokes/badge/?version=latest
