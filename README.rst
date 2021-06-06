@@ -6,7 +6,7 @@
         :target: https://pypi.python.org/pypi/gazprom_test_task_jokes
 
 .. image:: https://img.shields.io/travis/foryourselfand/gazprom_test_task_jokes.svg
-        :target: https://travis-ci.org/foryourselfand/gazprom_test_task_jokes
+        :target: https://travis-ci.com/foryourselfand/gazprom_test_task_jokes
 
 .. image:: https://readthedocs.org/projects/gazprom-test-task-jokes/badge/?version=latest
         :target: https://gazprom-test-task-jokes.readthedocs.io/en/latest/?badge=latest
