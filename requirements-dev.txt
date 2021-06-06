@@ -1,4 +1,17 @@
--r requirements.txt
+sanic
+sanic-openapi
+sanic-limiter
+sanic-useragent
+sanic-cors
+Sanic-SSLify
+secure
+json-logging-py
+aiohttp
+elasticsearch
+bcrypt
+sanic-jwt-extended==1.0.dev12
+aiohttp
+
 sanic-testing
 pytest
 pytest-asyncio
@@ -7,7 +20,7 @@ sphinx
 tox
 bumpversion
 twine
-coverage==5.2.1
+coverage
 pytest-cov
 pytest-runner
 gitchangelog

@@ -1,3 +1,5 @@
+from abc import ABC
+from abc import abstractmethod
 from typing import Dict
 from typing import List
 
@@ -5,10 +7,33 @@ from elasticsearch import AsyncElasticsearch
 from sanic import exceptions
 
 from model import Joke
-from repository.jokes_repository import JokesRepository
 
 
-class JokesElasticSearchRepository(JokesRepository):
+class JokesRepository(ABC):
+    INDEX = 'jokes'
+    
+    @abstractmethod
+    async def create(self, username: str, joke: str) -> Joke:
+        raise NotImplementedError()
+    
+    @abstractmethod
+    async def read(self, _id: str, username: str) -> Joke:
+        raise NotImplementedError()
+    
+    @abstractmethod
+    async def read_all(self, username: str) -> List[Joke]:
+        raise NotImplementedError()
+    
+    @abstractmethod
+    async def update(self, _id: str, username: str, joke: str) -> Joke:
+        raise NotImplementedError()
+    
+    @abstractmethod
+    async def delete(self, _id: str, username: str) -> None:
+        raise NotImplementedError()
+
+
+class JokesRepositoryElasticsearch(JokesRepository):
     def __init__(self, elasticsearch: AsyncElasticsearch):
         self.elasticsearch = elasticsearch
     

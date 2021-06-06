@@ -3,9 +3,10 @@ import logging
 from os import path as os_path
 from sys import path as sys_path
 
-from gazprom_test_task_jokes import app
+
 from pytest import fixture
 
+from manager import app
 
 sys_path.insert(0, os_path.join(os_path.dirname(os_path.abspath(__file__)), ".."))
 

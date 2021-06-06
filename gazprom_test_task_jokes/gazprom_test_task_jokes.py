@@ -1,5 +1,4 @@
 import asyncio
-from typing import Type
 
 import aiohttp
 from elasticsearch import AsyncElasticsearch
@@ -8,13 +7,14 @@ from sanic.log import logger
 from sanic_openapi.openapi2 import doc
 
 from blueprint.auth import auth
+from blueprint.health import health
 from blueprint.jokes import jokes
-from repository.jokes_elasticsearch_repository import JokesElasticSearchRepository
 
 from manager import app, secure_headers
-from repository.users_elasticsearch_repository import UsersElasticSearchRepository
+from repository.jokes import JokesRepositoryElasticsearch
+from repository.users import UsersRepositoryElasticsearch
 
-api = Blueprint.group(auth, jokes, url_prefix="/api", version=1)
+api = Blueprint.group(auth, jokes, health, url_prefix="/api", version=1)
 app.blueprint(api)
 
 
@@ -36,10 +36,11 @@ async def setup(app, loop):
             logger.debug('elasticsearch not connected')
             await asyncio.sleep(2)
     
-    app.ctx.users_repository = UsersElasticSearchRepository(app.ctx.elasticsearch)
-    app.ctx.jokes_repository = JokesElasticSearchRepository(app.ctx.elasticsearch)
+    app.ctx.users_repository = UsersRepositoryElasticsearch(app.ctx.elasticsearch)
+    app.ctx.jokes_repository = JokesRepositoryElasticsearch(app.ctx.elasticsearch)
     
     app.ctx.client_session = aiohttp.ClientSession(raise_for_status=True)
+    
 
 
 @app.after_server_stop

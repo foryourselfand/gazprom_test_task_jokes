@@ -1,5 +1,5 @@
-gunicorn
 sanic
+sanic-testing
 sanic-openapi
 sanic-limiter
 sanic-useragent

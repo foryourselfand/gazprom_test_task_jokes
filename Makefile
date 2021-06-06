@@ -35,20 +35,20 @@ clean-build: ## remove build artifacts
 	rm -fr build/
 	rm -fr dist/
 	rm -fr .eggs/
-	find . -name '*.egg-info' -exec rm -fr {} +
-	find . -name '*.egg' -exec rm -f {} +
+	find . -name '*.egg-info' -exec rm -rf {} +
+	find . -name '*.egg' -exec rm -rf {} +
 
 clean-pyc: ## remove Python file artifacts
-	find . -name '*.pyc' -exec rm -f {} +
-	find . -name '*.pyo' -exec rm -f {} +
-	find . -name '*~' -exec rm -f {} +
-	find . -name '__pycache__' -exec rm -fr {} +
+	find . -name '*.pyc' -exec rm -rf {} +
+	find . -name '*.pyo' -exec rm -rf {} +
+	find . -name '*~' -exec rm -rf {} +
+	find . -name '__pycache__' -exec rm -rf {} +
 
 clean-test: ## remove test and coverage artifacts
-	rm -fr .tox/
-	rm -f .coverage
-	rm -fr htmlcov/
-	rm -fr .pytest_cache
+	rm -rf .tox/
+	rm -rf .coverage
+	rm -rf htmlcov/
+	rm -rf .pytest_cache
 
 lint: ## check style with flake8
 	flake8 gazprom_test_task_jokes

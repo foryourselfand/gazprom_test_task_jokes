@@ -1,4 +1,17 @@
--r requirements.txt
+sanic
+sanic-openapi
+sanic-limiter
+sanic-useragent
+sanic-cors
+Sanic-SSLify
+secure
+json-logging-py
+aiohttp
+elasticsearch
+bcrypt
+sanic-jwt-extended==1.0.dev12
+aiohttp
+
 pytest
 pytest-sanic
 sphinx
