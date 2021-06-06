@@ -2,7 +2,7 @@ import pytest
 from sanic import Blueprint
 from sanic import Sanic
 
-from blueprint.health import health
+from route.health import health
 
 
 @pytest.fixture

@@ -12,7 +12,7 @@ from sanic_jwt_extended.tokens import Token
 from sanic_openapi.openapi2 import doc
 
 from manager import app
-from model import User
+from models import User
 
 auth = Blueprint('auth', url_prefix='/auth')
 

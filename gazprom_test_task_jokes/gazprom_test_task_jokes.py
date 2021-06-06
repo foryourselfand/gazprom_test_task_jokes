@@ -2,24 +2,23 @@ import asyncio
 
 import aiohttp
 from elasticsearch import AsyncElasticsearch
-from sanic import Blueprint, text
+from sanic import Blueprint
 from sanic.log import logger
-from sanic_openapi.openapi2 import doc
 
-from blueprint.auth import auth
-from blueprint.health import health
-from blueprint.jokes import jokes
-
-from manager import app, secure_headers
-from repository.jokes import JokesRepositoryElasticsearch
-from repository.users import UsersRepositoryElasticsearch
+from manager import app
+from manager import secure_headers
+from repository.jokes.elasticsearch import JokesRepositoryElasticsearch
+from repository.users.elasticsearch import UsersRepositoryElasticsearch
+from route.auth import auth
+from route.health import health
+from route.jokes import jokes
 
 api = Blueprint.group(auth, jokes, health, url_prefix="/api", version=1)
 app.blueprint(api)
 
 
 @app.before_server_start
-async def setup(app, loop):
+async def before_server_start(app, loop):
     logger.debug('app.before_server_start')
     
     app.ctx.elasticsearch = AsyncElasticsearch([{
@@ -58,8 +57,8 @@ async def on_request(request):
 @app.on_response
 async def on_response(request, response):
     logger.debug('app.on_response')
-    logger.debug(request.headers)
-    logger.debug(response.headers)
+    # logger.debug(request.headers)
+    # logger.debug(response.headers)
 
 
 @app.on_response
@@ -72,74 +71,3 @@ async def set_secure_headers(request, response):
 async def add_request_id_header(request, response):
     response.headers["X-Request-ID"] = request.id
 
-
-@app.route('/create_users_index', methods=['GET'])
-@doc.route(exclude=True)
-async def create_users_index(request):
-    index_name = 'users'
-    settings = {
-        "settings": {
-            "number_of_shards":   5,
-            "number_of_replicas": 1
-            },
-        "mappings": {
-            "dynamic":    "strict",
-            "properties": {
-                "username": {
-                    "type": "text"
-                    },
-                "password": {
-                    "type": "text"
-                    },
-                }
-            }
-        }
-    
-    created = False
-    try:
-        exist = await app.ctx.elasticsearch.indices.exists(index_name)
-        if not exist:
-            created = await app.ctx.elasticsearch.indices.create(index=index_name, body=settings)
-    except Exception as e:
-        logger.debug(e)
-    
-    if created:
-        return text(f'{index_name} index created')
-    else:
-        return text(f'{index_name} index not created')
-
-
-@app.route('/create_jokes_index', methods=['GET'])
-@doc.route(exclude=True)
-async def create_jokes_index(request):
-    index_name = 'jokes'
-    settings = {
-        "settings": {
-            "number_of_shards":   5,
-            "number_of_replicas": 1
-            },
-        "mappings": {
-            "dynamic":    "strict",
-            "properties": {
-                "username": {
-                    "type": "text"
-                    },
-                "joke":     {
-                    "type": "text"
-                    },
-                }
-            }
-        }
-    
-    created = False
-    try:
-        exist = await app.ctx.elasticsearch.indices.exists(index_name)
-        if not exist:
-            created = await app.ctx.elasticsearch.indices.create(index=index_name, body=settings)
-    except Exception as e:
-        logger.debug(e)
-    
-    if created:
-        return text(f'{index_name} index created')
-    else:
-        return text(f'{index_name} index not created')

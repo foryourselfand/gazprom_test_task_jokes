@@ -1,15 +1,16 @@
 import dataclasses
 from typing import List
 
-import aiohttp
-from sanic import Blueprint, HTTPResponse, Request, json
-from sanic_jwt_extended import jwt_required
+from sanic import Blueprint
+from sanic import HTTPResponse
+from sanic import json
+from sanic import Request
 from sanic_jwt_extended import refresh_jwt_required
 from sanic_jwt_extended.tokens import Token
 from sanic_openapi.openapi2 import doc
 
 from manager import app
-from model import Joke
+from models import Joke
 
 jokes = Blueprint('jokes', url_prefix='/jokes')
 
